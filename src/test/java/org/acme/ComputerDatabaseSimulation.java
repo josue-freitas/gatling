@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ComputerDatabaseSimulation extends Simulation {
 
     // The default url is the localhost, you can pass parameters from the running command, e.g. mvn gatling:test -DbaseUrl="http://localhost:8090"
-    String baseUrl = System.getProperty("baseUrl", "https://www.example.com/");
+    String baseUrl = System.getProperty("baseUrl", "http://localhost:8080");
 
     // Number of virtual users being introduced in the simulation
     int nbUsers = Integer.getInteger("users", 10);
@@ -37,7 +37,7 @@ public class ComputerDatabaseSimulation extends Simulation {
      * It just checks if the status is 200 and then pauses 5 seconds
      */
     ScenarioBuilder scn = scenario("GreetingResource")
-            .exec(http("")
+            .exec(http("hello")
                     .get("/")
                     .check(
                             status().is(200)
