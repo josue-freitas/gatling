@@ -61,5 +61,5 @@ jobs:
         with:
           name: gatling-reports
           path: |
-            target/gatling/**/index.html
+            target/gatling/**
 
