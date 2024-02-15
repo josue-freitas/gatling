@@ -44,7 +44,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: run-gatling
-    - uses: liatrio/run-gatling@v1.2.0
+      uses: liatrio/run-gatling@v1.2.0
       with:
         # Java Version to use
         # Default: '17'
