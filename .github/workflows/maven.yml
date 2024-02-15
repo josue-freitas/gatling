@@ -50,7 +50,7 @@ jobs:
 
       # Step 3: Cache dependencies to speed up subsequent runs
       - name: Cache Gatling dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -68,7 +68,7 @@ jobs:
 
       # Step 5: Upload Gatling reports as artifacts for review
       - name: Upload Gatling reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gatling-reports
           # Ensure this path matches where your Gatling reports are generated
