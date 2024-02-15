@@ -39,11 +39,6 @@ jobs:
         with:
           java-version: '17' 
           distribution: 'temurin'
-          
-      - name: Set up Maven
-        uses: orbit-actions/setup-maven@v0
-        with:
-          maven-version: 3.8.6
 
       # Cache dependencies to speed up subsequent runs
       - name: Cache Gatling dependencies
