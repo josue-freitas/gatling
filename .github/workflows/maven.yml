@@ -43,9 +43,27 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
-    - name: Run Quarkus
-      run: ./mvnw quarkus:dev
-      
     - name: Generate code coverage
       run: mvn gatling:test
-    
+
+  gatlingtwo:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+  
+      - name: Set up Gatling
+        run: |
+          wget https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/3.5.0/gatling-charts-highcharts-bundle-3.5.0-bundle.zip
+          unzip gatling-charts-highcharts-bundle-3.5.0-bundle.zip
+          export GATLING_HOME=$PWD/gatling-charts-highcharts-bundle-3.5.0
+  
+      - name: Run Gatling Tests
+        run: $GATLING_HOME/bin/gatling.sh -sf simulations -s org.acme.ComputerDatabaseSimulation
+
