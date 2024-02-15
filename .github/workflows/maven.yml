@@ -45,6 +45,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17' 
+          distribution: 'temurin'
+          cache: maven
 
       # Step 3: Cache dependencies to speed up subsequent runs
       - name: Cache Gatling dependencies
