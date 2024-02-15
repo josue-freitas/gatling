@@ -44,6 +44,27 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: run-gatling
-      uses: liatrio/run-gatling@v1.2.0
+    - uses: liatrio/run-gatling@v1.2.0
+      with:
+        # Java Version to use
+        # Default: '17'
+        javaVersion: '17'
+    
+        # Java Distribution to use
+        # Default: 'microsoft'
+        javaDistribution: 'temurin'
+    
+        # Path to the Gatling Test Suite's pom.xml file
+        # Default: './test'
+        pomPath: './'
+    
+        # Class of the simulation to run ('myPackage.MySimulationClass')
+        # Default: ''
+        # (Optionnal)
+        # Note: If the Test Suite contains more than one simulation,
+        #       you may want to configure the Maven plugin to run 
+        #       multiple simulations. Otherwise, you will have to fill this
+        #       parameter with the specific simulation to execute.
+        simulationClass: ''
             
 
