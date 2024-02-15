@@ -45,7 +45,7 @@ jobs:
         run: mvn gatling:test
 
       - name: Upload Gatling reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: gatling-reports
           path: |
