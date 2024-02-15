@@ -73,5 +73,5 @@ jobs:
           name: gatling-reports
           # Ensure this path matches where your Gatling reports are generated
           path: |
-            target/gatling/results/**
+            target/gatling/**
 
