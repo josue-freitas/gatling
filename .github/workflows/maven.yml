@@ -30,41 +30,46 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-  gatling:
+  gatling-test:
+    # Use the latest Ubuntu runner environment
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-java@v3
-      with:
-        java-version: "17"
-        distribution: "temurin"
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      # Step 1: Check out the repository's code to the runner
+      - name: Checkout code
+        uses: actions/checkout@v2
+        # No additional parameters required for checkout
 
-    - name: run-gatling
-      uses: liatrio/run-gatling@v1.2.0
-      with:
-        # Java Version to use
-        # Default: '17'
-        javaVersion: '17'
-    
-        # Java Distribution to use
-        # Default: 'microsoft'
-        javaDistribution: 'temurin'
-    
-        # Path to the Gatling Test Suite's pom.xml file
-        # Default: './test'
-        pomPath: ''
-    
-        # Class of the simulation to run ('myPackage.MySimulationClass')
-        # Default: ''
-        # (Optionnal)
-        # Note: If the Test Suite contains more than one simulation,
-        #       you may want to configure the Maven plugin to run 
-        #       multiple simulations. Otherwise, you will have to fill this
-        #       parameter with the specific simulation to execute.
-        simulationClass: ''
-            
+      # Step 2: Set up a specific version of Java (required by Gatling)
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17' 
+
+      # Step 3: Cache dependencies to speed up subsequent runs
+      - name: Cache Gatling dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.ivy2/cache
+            ~/.sbt/boot
+            ~/.coursier
+          key: ${{ runner.os }}-gatling-${{ hashFiles('**/pom.xml', '**/build.sbt') }}
+          # Use restore-keys to find a cache in case of a cache miss
+          restore-keys: |
+            ${{ runner.os }}-gatling-
+
+      # Step 4: Run the Gatling test using your build tool's specific command
+      - name: Run Gatling test
+        run: mvn gatling:test
+
+      # Step 5: Upload Gatling reports as artifacts for review
+      - name: Upload Gatling reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: gatling-reports
+          # Ensure this path matches where your Gatling reports are generated
+          path: |
+            target/gatling/results/**
 
