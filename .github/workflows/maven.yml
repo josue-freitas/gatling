@@ -63,4 +63,10 @@ jobs:
           name: gatling-reports
           path: |
             target/gatling/**
-
+            
+  machine-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check runner's IP address
+        run: echo "Runner's IP is ${{ runner.ip }}"
+  
