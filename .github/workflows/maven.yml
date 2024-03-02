@@ -92,7 +92,8 @@ jobs:
           distribution: 'temurin'
           
       - name: OWASP Dependency Check
-        run: mvn clean package org.owasp:dependency-check-maven:aggregate --file src/pom.xml -Dfmt.skip=true -DskipTests=true -fae -B -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN -DfailBuildOnCVSS=7
+        run: mvn verify -DskipDCs=false
+      
       - name: Upload scan results to GitHub Code Scanning
         if: ${{ always() }}
         uses: github/codeql-action/upload-sarif@v2
