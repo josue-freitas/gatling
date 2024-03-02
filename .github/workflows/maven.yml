@@ -85,9 +85,9 @@ jobs:
       - name: Upload report
         uses: actions/upload-artifact@v2
         with:
-          name: gatling-reports
+          name: dependency-check-report
           path: |
-            target/gatling/**
+            target/dependency-check-report.html
 
   machine-test:
     runs-on: ubuntu-latest
