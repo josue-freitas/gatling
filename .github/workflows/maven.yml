@@ -80,7 +80,7 @@ jobs:
         run:  mvn -B package --file pom.xml
 
       - name: Run Maven Verify
-        run: mvn verify
+        run: mvn verify -DskipDCs=false
 
       - name: Upload report
         uses: actions/upload-artifact@v2
