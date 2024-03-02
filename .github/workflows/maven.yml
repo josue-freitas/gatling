@@ -94,11 +94,6 @@ jobs:
       - name: OWASP Dependency Check
         run: mvn verify -DskipDCs=false
       
-      - name: Upload scan results to GitHub Code Scanning
-        if: ${{ always() }}
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: target/dependency-check-report.sarif
       - name: Remove SNAPSHOT jars from repository
         run: |
           find .m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
