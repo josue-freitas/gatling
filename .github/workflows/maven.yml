@@ -75,11 +75,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-owasp-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-owasp-
       - name: Build project with Maven
         run:  mvn -B package --file pom.xml
 
-      - name: Run Maven Verify
+      - name: Run Dependency Check
         run: mvn verify -DskipDCs=false
 
       - name: Upload report
@@ -88,6 +93,9 @@ jobs:
           name: dependency-check-report
           path: |
             target/dependency-check-report.html
+      - name: Remove SNAPSHOT jars from repository
+        run: |
+          find .m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
 
   machine-test:
     runs-on: ubuntu-latest
