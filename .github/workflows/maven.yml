@@ -83,9 +83,26 @@ jobs:
             ${{ runner.os }}-owasp-
       - name: Build project with Maven
         run:  mvn -B package --file pom.xml
+        
+      - name: Restore cached Maven dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: ~/.m2/repository
+            # Using datetime in cache key as OWASP database may change, without the pom changing
+          key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.datetime }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+              ${{ runner.os }}-maven-${{ steps.get-date.outputs.datetime }}
+              ${{ runner.os }}-maven-
 
-      - name: Run Dependency Check
+      - name: Build & scan
         run: mvn verify -DskipDCs=false
+
+      - name: Cache Maven dependencies
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.datetime }}-${{ hashFiles('**/pom.xml') }}
 
       - name: Upload report
         uses: actions/upload-artifact@v2
