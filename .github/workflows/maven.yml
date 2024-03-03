@@ -94,9 +94,7 @@ jobs:
       - name: OWASP Dependency Check
         run: mvn verify -DskipDCs=false
       
-      - name: Remove SNAPSHOT jars from repository
-        run: |
-          find .m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
+
 
   machine-test:
     runs-on: ubuntu-latest
