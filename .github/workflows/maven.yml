@@ -85,17 +85,14 @@ jobs:
           key: ${{ runner.os }}-owasp-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-owasp-
-            
-      - uses: actions/setup-java@v4
+      - name: Run OWASP
+        run: mvn verify -DskipTests -DskipDCs=false
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
         with:
-          java-version: '17' 
-          distribution: 'temurin'
-          
-      - name: OWASP Dependency Check
-        run: mvn verify -DskipDCs=false
-      
-
-
+          name: dependency-check-report
+          path: |
+            target/dependency-check-report.html
   machine-test:
     runs-on: ubuntu-latest
     steps:
