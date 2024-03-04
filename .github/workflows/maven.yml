@@ -13,6 +13,7 @@ on:
     branches: [ "master", "dev" ]
   pull_request:
     branches: [ "master", "dev" ]
+    types: [opened, reopened, synchronize]
 
 jobs:
   build:
@@ -86,6 +87,7 @@ jobs:
           key: ${{ runner.os }}-owasp-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-owasp-
+            ${{ runner.os }}-owasp-master-
       - name: Run OWASP
         run: mvn verify -DskipTests -DskipDCs=false
       - name: Upload Report
@@ -94,6 +96,7 @@ jobs:
           name: dependency-check-report
           path: |
             target/dependency-check-report.html
+
   machine-test:
     runs-on: ubuntu-latest
     steps:
