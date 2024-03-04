@@ -54,7 +54,6 @@ jobs:
           # Use restore-keys to find a cache in case of a cache miss
           restore-keys: |
             ${{ runner.os }}-gatling-
-            ${{ runner.os }}-gatling-master-
 
       - name: Run Gatling test
         run: mvn gatling:test
