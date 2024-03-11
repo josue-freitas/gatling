@@ -9,7 +9,7 @@
 name: Java CI with Maven
 
 on:
-  workflow_disptah:
+  workflow_dispatch:
     inputs:
       name:
         description: 'Person to greet'
