@@ -9,17 +9,12 @@
 name: Java CI with Maven
 
 on: 
-  push:
-    branches: [ "master", "dev" ]
-  pull_request:
-    branches: [ "master", "dev" ]
-    types: [opened, reopened, synchronize]
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Person to greet'
-        default: 'World'
-        required: true
+      run_deploy:
+        description: 'Run deploy job'
+        required: false
+        default: 'true'
 
 jobs:
   greet:
