@@ -9,13 +9,22 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches: [ "master", "dev" ]
-  pull_request:
-    branches: [ "master", "dev" ]
-    types: [opened, reopened, synchronize]
-
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        default: 'World'
+        required: true
+ 
 jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send greeting
+      run: echo "Hello ${{github.event.inputs.name}}"
+
+
+
   build:
     runs-on: ubuntu-latest
 
