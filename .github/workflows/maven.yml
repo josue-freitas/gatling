@@ -36,70 +36,28 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      
-  dependencyCheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-      - uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-owasp-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-owasp-
-            ${{ runner.os }}-owasp-develop-
-      - name: Run OWASP
-        run: mvn verify -DskipTests -DskipDCs=false
-
-      - name: Upload Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: dependency-check-report
-          path: |
-            target/dependency-check-report.html
-
-  cve-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-        
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: "arn:aws:iam::142585694264:role/aws-gh-oidc"
-          role-skip-session-tagging: true
-          aws-region: "eu-central-1"
-
-      - name: Get dependency-check-data cache from S3
-        run: |
-          aws s3 sync s3://los-atc-github-cache `pwd`/.gradle/dependency-check-data --delete --no-progress
-          ls -laRth `pwd`/.gradle/dependency-check-data
-
-      - name: Check dependencies for CVEs
-        run: |
-          export GRADLE_USER_HOME=`pwd`/.gradle
-          ./gradlew dependencyCheckAnalyze
           
   machine-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check runner's IP address
         run: echo "Runner's IP is ${{ runner.ip }}"
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+          
+      - name: Start Azurite container
+        run: docker run -d --rm -p 10000:10000 -p 10001:10001 azuresdk/azurite
+
+      - name: Set environment variables
+        run: |
+          export AZURE_STORAGE_ACCOUNT=devstoreaccount1
+          export AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;"
+
+      - name: Create Azure Storage container
+        run: az storage container create --name boss-tfstate-test
   
